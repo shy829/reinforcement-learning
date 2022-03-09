@@ -28,11 +28,26 @@ R = np.array([-2, -2, -2, 10, 1, -1, 0])
 inv_0 = np.linalg.inv(i - p * r0)
 v0 = np.dot(inv_0, R)
 print('r=0.9', v0)
-print("r=0", np.dot(np.linalg.inv(i-p*0),R))
-print("r=1",np.dot(np.linalg.pinv(i-p),R))
+print("r=0", np.dot(np.linalg.inv(i - p * 0), R))
+print("r=1", np.dot(np.linalg.pinv(i - p), R))
 try:
     inv_1 = np.linalg.inv(i - p * r1)
     v1 = np.dot(inv_1, R)
     print(v1)
 except Exception as e:
     print(e)
+
+# Markov decision process with action A
+# p(a|s) is a distribution over actions given states
+# Pss_p = sum(p(a|s)*Pss_a)
+# Rs_p = sum(p(a|s)*Rs_a)
+
+# p(a|s) = 0.5, r = 1
+# c1,c2,c3,fb,sleep
+p_as = 0.5
+i = np.identity(5)
+p = np.array([[0, 0.5, 0, 0.5, 0], [0, 0, 0.5, 0, 0.5], [0.5 * 0.2, 0.4 * 0.5, 0.4 * 0.5, 0, 0.5],
+              [0.5, 0, 0, 0.5, 0], [0, 0, 0, 0, 0]])
+R = np.array([-2 * p_as - 1 * p_as, -2 * p_as + 0 * p_as, 10 * p_as + 1 * p_as, -1 * p_as, 0])
+r = 1
+print("action:", np.dot(np.linalg.pinv(i - p * r), R))
