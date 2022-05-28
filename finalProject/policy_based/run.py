@@ -5,13 +5,13 @@ import torch.nn.functional as F
 import argparse
 import gym
 import pygame
-import mujoco
+import mujoco_py
 
 from TD3 import TD3
 
 # hyper parameters
 seed = 2022
-load_model = True
+load_model = False
 
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     action_num = env.action_space.shape[0]
     max_action = float(env.action_space.high[0])
     
-    td3 = TD3(state_num, action_num, max_action, args.env)
+    td3 = TD3(state_num, action_num, max_action, args.env_name)
     if load_model:
         td3.load_model()
     

@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import gym
 import pygame
 from tqdm import tqdm
-import mujoco
+import mujoco_py
 
 from Net import Actor, Critic
 from ReplayBuffer import ReplayBuffer
@@ -32,7 +32,7 @@ class TD3(object):
         self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=lr)
         
         self.critic = Critic(state_num, action_num).to(device)
-        self.critic_target = Critic(state_num, action_num)
+        self.critic_target = Critic(state_num, action_num).to(device)
         self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=lr)
         
         self.state_num = state_num
@@ -49,20 +49,21 @@ class TD3(object):
         self.step = 0
         # use Gauss noise N(0, 0.1)
         self.action_noise = 0
-        self.memory = ReplayBuffer(state_num, action_num, max_size=1e6)
+        # float->int
+        self.memory = ReplayBuffer(state_num, action_num, max_size=int(1e6))
         
         
     def choose_action(self, s):
-        s = torch.FloatTensor(s.reshape(-1, 1)).to(device)
-        self.actor.eval()
-        with torch.no_grad():
-            a = self.actor(s).cpu().data.numpy().flatten()
+        s = torch.FloatTensor(s.reshape(1, -1)).to(device)
+        # self.actor.eval()
+        # with torch.no_grad():
+        a = self.actor(s).cpu().data.numpy().flatten()
         return a
     
     def learn(self):
         self.step+=1
         # sample N transitions from ReplayBuffer
-        s, a, r, s_, done = self.memory.sample(batch_size)
+        s, a, s_, r, done = self.memory.sample(batch_size)
         
         # select next action from actor target and add noise
         with torch.no_grad():
@@ -91,8 +92,8 @@ class TD3(object):
             self.actor_optimizer.step()
             
             # update target net
-            self.soft_update(self.critic, self.critic_target, self.tau)
-            self.soft_update(self.actor, self.actor_target, self.tau)
+            self.soft_update(self.critic, self.critic_target)
+            self.soft_update(self.actor, self.actor_target)
             
     def soft_update(self, local_model, target_model):
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
@@ -131,7 +132,7 @@ class TD3(object):
         return ep_r/episode_num
                 
         
-    def train(self, train_step = 1e6):
+    def train(self, train_step = 1000000):
         ep_r = 0
         ep_num = 0
         ep_step = 0
@@ -149,7 +150,7 @@ class TD3(object):
         
         
         for step in p:
-            self.env.render()
+            # self.env.render()
             ep_step += 1
             # first choose randomly to train
             if step < start_train_time:
@@ -160,7 +161,7 @@ class TD3(object):
             
             s_, r, done, _ = self.env.step(a)
             
-            if ep_step >= self.env._max_episode_step:
+            if ep_step >= self.env._max_episode_steps:
                 done = 0
             done = float(done)
             

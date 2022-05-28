@@ -28,20 +28,20 @@ class Critic(nn.Module):
     def __init__(self, state_num, action_num, layer1_unit=400, layer2_unit=300) -> None:
         super().__init__()
         # Q1
-        self.l1 = nn.Linear(state_num, layer1_unit)
-        self.l2 = nn.Linear(layer1_unit + action_num, layer2_unit)
+        self.l1 = nn.Linear(state_num+action_num, layer1_unit)
+        self.l2 = nn.Linear(layer1_unit, layer2_unit)
         self.l3 = nn.Linear(layer2_unit, 1)
         self.l1.weight.data.uniform_(*hidden_init(self.l1))
         self.l2.weight.data.uniform_(*hidden_init(self.l2))
         self.l3.weight.data.uniform_(-3e-4, 3e-4)
         
         # Q2
-        self.l4 = nn.Linear(state_num, layer1_unit)
-        self.l5 = nn.Linear(layer1_unit + action_num, layer2_unit)
+        self.l4 = nn.Linear(state_num+action_num, layer1_unit)
+        self.l5 = nn.Linear(layer1_unit, layer2_unit)
         self.l6 = nn.Linear(layer2_unit, 1)
-        self.l1.weight.data.uniform_(*hidden_init(self.l4))
-        self.l2.weight.data.uniform_(*hidden_init(self.l5))
-        self.l3.weight.data.uniform_(-3e-4, 3e-4)
+        self.l4.weight.data.uniform_(*hidden_init(self.l4))
+        self.l5.weight.data.uniform_(*hidden_init(self.l5))
+        self.l6.weight.data.uniform_(-3e-4, 3e-4)
         
     def forward(self, s, a):
         # (state, action) -> Q
