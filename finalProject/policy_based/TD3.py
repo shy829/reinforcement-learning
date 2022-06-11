@@ -192,36 +192,17 @@ class TD3(object):
                 self.save_model()
         
         # use median filter 
-        ep_step_list = signal.medfilt(ep_step_list, kernel_size=kernel_size)
-        ep_r_list = signal.medfilt(ep_r_list, kernel_size=kernel_size)
+        # ep_step_list = signal.medfilt(ep_step_list, kernel_size=kernel_size)
+        # ep_r_list = signal.medfilt(ep_r_list, kernel_size=kernel_size)
         
         draw_ep_reward(ep_r_list)
         draw_ev_reward(ev_r_list)
         draw_ep_step(ep_step_list)
         
                 
-                
-                
-                
             
             
-                
-                
-                
-                
             
-            
-        
-        
-        
         
         
     
-            
-        
-            
-            
-        
-        
-        
-        

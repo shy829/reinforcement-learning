@@ -48,18 +48,18 @@ def preprocess(s):
     return np.array(x_t).astype(np.float32) / 255.0
 
 
-def load_memory(buf_size, n_states):
-    memory = np.zeros((buf_size, 1))
-    if os.path.exists('learning_DDQN.csv'):
-        print("open file")
-        data = pd.read_csv("learning_DDQN.csv")
-        for index, row in data.iterrows():
-            memory[index, 0:1] = row['s1']
-            memory[index, 1:2] = row['s2']
-            memory[index, 2:3] = row['s3']
-            memory[index, 3:4] = row['a']
-            memory[index, 4:5] = row['r']
-            memory[index, 5:6] = row['s_1']
-            memory[index, 6:7] = row['s_2']
-            memory[index, 7:8] = row['s_3']
-    return memory
+# def load_memory(buf_size, n_states):
+#     memory = np.zeros((buf_size, 1))
+#     if os.path.exists('learning_DDQN.csv'):
+#         print("open file")
+#         data = pd.read_csv("learning_DDQN.csv")
+#         for index, row in data.iterrows():
+#             memory[index, 0:1] = row['s1']
+#             memory[index, 1:2] = row['s2']
+#             memory[index, 2:3] = row['s3']
+#             memory[index, 3:4] = row['a']
+#             memory[index, 4:5] = row['r']
+#             memory[index, 5:6] = row['s_1']
+#             memory[index, 6:7] = row['s_2']
+#             memory[index, 7:8] = row['s_3']
+#     return memory

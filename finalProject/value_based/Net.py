@@ -16,6 +16,7 @@ class Net(nn.Module):
     def __init__(self, n_actions, LR, EPS):
         super(Net, self).__init__()
         self.n_actions = n_actions
+        # network layer with 3 convolutional layers
         self.fc = nn.Sequential(
             nn.Conv2d(in_channels=4, out_channels=32, kernel_size=8, stride=4),
             nn.ReLU(),
@@ -24,11 +25,13 @@ class Net(nn.Module):
             nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1),
             nn.ReLU()
         )
+        # advantage layer with 2 fully_connected layers
         self.adv = nn.Sequential(
             nn.Linear(3136, 512),
             nn.ReLU(),
             nn.Linear(512, self.n_actions)
         )
+        # value layer with 2 fully_connected layers
         self.val = nn.Sequential(
             nn.Linear(3136, 512),
             nn.ReLU(),
